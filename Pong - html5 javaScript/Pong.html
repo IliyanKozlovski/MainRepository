@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>PONG</title>
+    <style>
+        .drawing-area {
+            width:700px;
+            height:400px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="drawing-area" class="drawing-area" width ="700" height="400"></canvas>
+    <script>
+        function rect(x, y, w, h) {
+            return {
+                x: x,
+                y: y,
+                width: w,
+                height: h
+            };
+        }
+
+        var canvas = document.getElementById("drawing-area"),
+            context = canvas.getContext("2d");
+        var paddle = rect(10, canvas.height / 2 - 35, 10, 70),
+            ball = rect(canvas.width / 2, canvas.height / 2, 15, 15);
+        ball.dx = 4;
+        ball.dy = 4;
+
+        var keys = { w: 87, s: 83 }, keyboard = [];
+        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        var score = 0, playing = false;
+        window.onkeydown = function (ev) {
+            keyboard[ev.which] = true;
+        };
+
+        window.onkeyup = function (ev) {
+            keyboard[ev.which] = false;
+        };
+
+        function render() {
+            context.fillStyle = "black";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            context.fillStyle = "magenta";
+            context.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            context.fillRect(ball.x, ball.y, ball.width, ball.height);
+
+            context.font = "72px MSComicSans";
+            context.fillText(score, canvas.width / 2, 60);
+
+            requestAnimationFrame(render);
+        }
+
+        function update() {
+            if (!playing)
+                return;
+
+            if (keyboard[keys.w] && paddle.y - 6 >= 0)
+                paddle.y -= 6;
+            else if (keyboard[keys.s] && paddle.y + paddle.height + 6 <= canvas.height)
+                paddle.y += 6;
+
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            if (ball.y <= 0 || ball.y + ball.height >= canvas.height)
+                ball.dy = -ball.dy;
+            if (ball.x <= 0 || ball.x + ball.width >= canvas.width)
+                ball.dx = -ball.dx;
+
+            if (ball.x <= paddle.x + paddle.width && ball.y <= paddle.y + paddle.height && ball.y + ball.height >= paddle.y)
+                ball.dx = -ball.dx;
+
+            //win conditions
+            if (ball.x + 5 < paddle.x + paddle.width) {
+                playing = false;
+                setTimeout(reset, 1000);
+                score++;
+                return;
+            }
+
+            setTimeout(update, 10);
+        }
+
+        function reset() {
+            playing = true;
+
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+
+            setTimeout(update, 10);
+            requestAnimationFrame(render);
+        }
+
+        reset();
+    </script>
+</body>
+</html>
