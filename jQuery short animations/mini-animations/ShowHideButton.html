@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Show-Hide Example</title>
+    <script src="Scripts/jquery-1.9.1.js"></script>
+</head>
+<body>
+    <button id="hideButton">hide</button>
+    <button id="showButton">show</button>
+    <div id="something" style="width: 150px; margin: 10px; background:red">Something to hide</div>
+    <script>
+        $("#showButton").hide();
+
+        $("#hideButton").click(function () {
+            $("#something").hide(2000);
+            $("#showButton").show(2000);
+            $("#hideButton").hide(2000);
+        });
+
+        $("#showButton").click(function () {
+            $("#something").show(2000);
+            $("#showButton").hide(2000);
+            $("#hideButton").show(2000);
+        });
+
+    </script>
+</body>
+</html>
