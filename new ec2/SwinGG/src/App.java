@@ -10,7 +10,7 @@ public class App {
 			public void run() {
 				JFrame frame = new MainFrame("Hello World Swing");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setSize(500, 400);
+				frame.setSize(600, 500);
 				frame.setVisible(true);
 
 				
